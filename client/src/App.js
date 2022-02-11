@@ -10,6 +10,8 @@ function App() {
   const [branch,setBranch] = useState("");
   const [roll,setRoll] = useState(0);
 
+  const [newRoll,setNewRoll] = useState(0);
+
   const [studentList,setStudentList] = useState([]);
 
   const addStudent = () => {
@@ -34,6 +36,21 @@ function App() {
       setStudentList(response.data);
     });
   }
+  const updateStudentRoll = (id)=> {
+    Axios.put("http://localhost:3001/update",{roll: newRoll, id: id}).then((response)=>{
+      setStudentList(studentList.map((val)=>{
+        return val.id == id ? {id:val.id, name: val.name, section: val.section, branch: val.branch, roll: newRoll}: val;
+      }));
+    });
+  };
+
+  const deleteStudent = (id) => {
+    Axios.delete('http://localhost:3001/delete/${id}').then((response)=>{
+      setStudentList(studentList.filter((val)=>{
+        return val.id != id;
+      }));
+    });
+  };
 
   return (
     <div className="App">
@@ -54,10 +71,19 @@ function App() {
 
       {studentList.map((val,key)=>{
         return <div className="student">
+          <div> 
           <h3>Name:{val.name}</h3>
           <h3>Section:{val.section}</h3>
           <h3>Branch:{val.branch}</h3>
           <h3>Roll:{val.roll}</h3>
+          </div>
+
+          <div>
+          <input type="text" placeholder='100'
+          onChange={(event) => {setNewRoll(event.target.value)}}/>
+          <button onClick={()=> {updateStudentRoll(val.id);}}>Update</button>
+          <button onClick={()=> {deleteStudent(val.id);}}>Delete</button>
+          </div>
           
           </div>
       })}
