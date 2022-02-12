@@ -35,9 +35,9 @@ function App() {
     .then((response)=>{
       setStudentList(response.data);
     });
-  }
+  };
   const updateStudentRoll = (id)=> {
-    Axios.put("http://localhost:3001/update",{roll: newRoll, id: id}).then((response)=>{
+    Axios.put("http://localhost:3001/update",{roll: newRoll, id: id }).then((response)=>{
       setStudentList(studentList.map((val)=>{
         return val.id == id ? {id:val.id, name: val.name, section: val.section, branch: val.branch, roll: newRoll}: val;
       }));
@@ -45,12 +45,16 @@ function App() {
   };
 
   const deleteStudent = (id) => {
-    Axios.delete('http://localhost:3001/delete/${id}').then((response)=>{
-      setStudentList(studentList.filter((val)=>{
+
+    Axios.delete(`http://localhost:3001/update/${id}`).then((response) => {
+     setStudentList(studentList.filter((val) => {
         return val.id != id;
-      }));
+      })
+      );
     });
   };
+
+  
 
   return (
     <div className="App">
@@ -82,10 +86,13 @@ function App() {
           <input type="text" placeholder='100'
           onChange={(event) => {setNewRoll(event.target.value)}}/>
           <button onClick={()=> {updateStudentRoll(val.id);}}>Update</button>
-          <button onClick={()=> {deleteStudent(val.id);}}>Delete</button>
+          {""}
+          <button onClick={()=> {deleteStudent(val.id);
+          }}>Delete</button>
           </div>
           
           </div>
+      
       })}
       </div>
 
